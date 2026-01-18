@@ -4,7 +4,6 @@ from urllib.parse import urlparse
 from telegram import Update, ReactionTypeEmoji, Bot
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 from pyrogram import Client
-from pyrogram.enums import ChatPrivileges
 import asyncio
 
 # Get environment variables
