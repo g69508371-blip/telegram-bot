@@ -138,18 +138,28 @@ async def add_channel(update: Update, context: CallbackContext) -> None:
         await update.message.reply_text(f'Error: {str(e)}')
         logger.error(f"Error: {e}")
 
-async def main_async():
+async def post_init(application: Application) -> None:
+    """
+    This runs after the application is initialized but before it starts.
+    Use this to fetch usernames or perform setup.
+    """
     global reaction_bot_usernames
+    logger.info("Fetching bot usernames...")
     reaction_bot_usernames = await fetch_usernames()
-    application = Application.builder().token(MAIN_TOKEN).build()
-   
+    logger.info(f"Bots active: {reaction_bot_usernames}")
+
+def main():
+    # 1. Build the application
+    application = Application.builder().token(MAIN_TOKEN).post_init(post_init).build()
+    
+    # 2. Add handlers
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('react', react))
     application.add_handler(CommandHandler('add', add_channel))
-    application.add_handler(MessageHandler(filters.ALL, auto_react))  # React to all new messages in monitored chats
-   
-    # Run as webhook
-    await application.run_webhook(
+    application.add_handler(MessageHandler(filters.ALL, auto_react))
+    
+    # 3. Run Webhook (This is a BLOCKING call, it handles the loop for you)
+    application.run_webhook(
         listen='0.0.0.0',
         port=PORT,
         url_path=MAIN_TOKEN,
@@ -157,4 +167,4 @@ async def main_async():
     )
 
 if __name__ == '__main__':
-    asyncio.run(main_async())
+    main() # Call the non-async main function
