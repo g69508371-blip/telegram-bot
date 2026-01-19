@@ -50,15 +50,15 @@ async def react(update: Update, context: CallbackContext) -> None:
         parsed_url = urlparse(link)
         if parsed_url.scheme != 'https' or parsed_url.netloc != 't.me':
             raise ValueError("Invalid Telegram link.")
-       
+        
         path_parts = parsed_url.path.strip('/').split('/')
         if len(path_parts) != 2:
             raise ValueError("Link should be in format https://t.me/username/message_id")
-       
+        
         username = path_parts[0]
         message_id = int(path_parts[1])
         chat_id = f'@{username}'  # Format as '@username' for API
-       
+        
         success_count = 0
         for bot in bots:
             try:
@@ -70,7 +70,7 @@ async def react(update: Update, context: CallbackContext) -> None:
                 success_count += 1
             except Exception as e:
                 logger.error(f"Error with bot: {e}")
-       
+        
         await update.message.reply_text(f'Added {success_count} reactions with {emoji}!')
     except ValueError as ve:
         await update.message.reply_text(f'Error: {ve}')
@@ -79,24 +79,28 @@ async def react(update: Update, context: CallbackContext) -> None:
         logger.error(f"Error: {e}")
 
 async def auto_react(update: Update, context: CallbackContext) -> None:
-    if update.message and update.message.chat.username == 'chatterbox_family':  # Your channel
-        message_id = update.message.message_id
-        chat_id = update.message.chat_id
-        emoji = '❤'  # Default emoji; customize
-       
-        success_count = 0
-        for bot in bots:
-            try:
-                await bot.set_message_reaction(
-                    chat_id=chat_id,
-                    message_id=message_id,
-                    reaction=[ReactionTypeEmoji(emoji=emoji)]
-                )
-                success_count += 1
-            except Exception as e:
-                logger.error(f"Error: {e}")
-       
-        logger.info(f'Auto-added {success_count} reactions to message {message_id}')
+    # Handle both regular messages and channel posts
+    message = update.message or update.channel_post
+    if message:
+        logger.info(f"Received update for chat: {message.chat.username if message.chat else 'None'}")
+        if message.chat.username == 'chatterbox_family':  # Your channel
+            message_id = message.message_id
+            chat_id = message.chat_id
+            emoji = '❤'  # Default emoji; customize
+            
+            success_count = 0
+            for bot in bots:
+                try:
+                    await bot.set_message_reaction(
+                        chat_id=chat_id,
+                        message_id=message_id,
+                        reaction=[ReactionTypeEmoji(emoji=emoji)]
+                    )
+                    success_count += 1
+                except Exception as e:
+                    logger.error(f"Error: {e}")
+            
+            logger.info(f'Auto-added {success_count} reactions to message {message_id}')
 
 async def add_channel(update: Update, context: CallbackContext) -> None:
     if len(context.args) < 1:
@@ -108,7 +112,7 @@ async def add_channel(update: Update, context: CallbackContext) -> None:
     try:
         async with Client("userbot_session", api_id=API_ID, api_hash=API_HASH, phone_number=PHONE_NUMBER) as app:
             channel = await app.get_chat(channel_username)
-           
+            
             for bot_username in reaction_bot_usernames:
                 try:
                     bot_user = await app.get_users(bot_username)
@@ -132,7 +136,7 @@ async def add_channel(update: Update, context: CallbackContext) -> None:
                     logger.info(f"Added {bot_username} as admin to {channel_username}")
                 except Exception as e:
                     logger.error(f"Error adding {bot_username}: {e}")
-           
+            
             await update.message.reply_text(f'Added all reaction bots to @{channel_username}!')
     except Exception as e:
         await update.message.reply_text(f'Error: {str(e)}')
@@ -156,7 +160,7 @@ def main():
     application.add_handler(CommandHandler('start', start))
     application.add_handler(CommandHandler('react', react))
     application.add_handler(CommandHandler('add', add_channel))
-    application.add_handler(MessageHandler(filters.ALL, auto_react))
+    application.add_handler(MessageHandler(filters.ALL, auto_react))  # Handles all updates, including channel posts
     
     # 3. Run Webhook (This is a BLOCKING call, it handles the loop for you)
     application.run_webhook(
@@ -167,4 +171,4 @@ def main():
     )
 
 if __name__ == '__main__':
-    main() # Call the non-async main function
+    main()  # Call the non-async main function
