@@ -83,7 +83,7 @@ async def auto_react(update: Update, context: CallbackContext) -> None:
     message = update.message or update.channel_post
     if message:
         logger.info(f"Received update for chat: {message.chat.username if message.chat else 'None'}")
-        if message.chat.username == 'chatterbox_family':  # Your channel
+        if message.chat.username in ['chatterbox_family', 'bloomswithsaniya07', 'quotes357', 'tulipesthetics', 'attitudesera', 'factslifetipsskills', 'feelingsvibesemotions', 'thecreativeworld11']:  # Your channels
             message_id = message.message_id
             chat_id = message.chat_id
             emoji = '❤'  # Default emoji; customize
