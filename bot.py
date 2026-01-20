@@ -122,14 +122,8 @@ async def add_channel(update: Update, context: CallbackContext) -> None:
                         chat_id=channel.id,
                         user_id=bot_user.id,
                         privileges=ChatPrivileges(
-                            can_change_info=False,
                             can_post_messages=True,
-                            can_edit_messages=True,
-                            can_delete_messages=False,
-                            can_invite_users=False,
-                            can_pin_messages=False,
-                            can_promote_members=False,
-                            is_anonymous=False
+                            can_edit_messages=True
                         )
                     )
                     logger.info(f"Added {bot_username} as admin to {channel_username}")
