@@ -87,7 +87,7 @@ async def auto_react(update: Update, context: CallbackContext) -> None:
         if message.chat.username in ['chatterbox_family', 'bloomswithsaniya07', 'quotes357', 'tulipesthetics', 'attitudesera', 'factslifetipsskills', 'feelingsvibesemotions', 'thecreativeworld11']:  # Your channels
             message_id = message.message_id
             chat_id = message.chat_id
-            emojis = ['❤', '❤‍🔥', '👻', '🥰', '🕊']  # List of random emojis
+            emojis = ['❤', '❤‍🔥', '🥰', '🍓', '🤩', '🤗', '🕊']  # List of random emojis
             
             success_count = 0
             for bot in bots:
