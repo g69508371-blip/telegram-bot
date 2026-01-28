@@ -84,7 +84,7 @@ async def auto_react(update: Update, context: CallbackContext) -> None:
     message = update.message or update.channel_post
     if message:
         logger.info(f"Received update for chat: {message.chat.username if message.chat else 'None'}")
-        if message.chat.username in ['chatterbox_family', 'bloomswithsaniya07', 'quotes357', 'tulipesthetics', 'attitudesera', 'factslifetipsskills', 'feelingsvibesemotions', 'thecreativeworld11', 'musicflowtune', 'lifebloomer', 'ridamusingscorner', 'theworld_nicetomeetyou', 'thoughtsoftheday1', 'tulippages', 'angelsdreams7', 'piexydiary', 'babiessweethome', 'parizaadsays', 'hazelsmusings', 'hazelsqueen', 'whyalwaysmewhyy', 'aliveagain01', 'asiandramashd', 'beingloyalstrange', 'tinkerbellinnerme', 'asianmovieshows', 'jerryyyoftommm', 'tommmofjerryyy', 'rosestheticsbloom']:  # Your channels
+        if message.chat.username in ['chatterbox_family', 'bloomswithsaniya', 'quotes357', 'tulipesthetics', 'attitudesera', 'factslifetipsskills', 'feelingsvibesemotions', 'thecreativeworld11', 'musicflowtune', 'lifebloomer', 'ridamusingscorner', 'theworldthinks', 'thoughtsoftheday1', 'tulippages', 'angelsdreams7', 'piexydiary', 'babiessweethome', 'parizaadsays', 'hazelsmusings', 'hazelsqueen', 'whyalwaysmewhyy', 'aliveagain01', 'asiandramashd', 'beingloyalstrange', 'tinkerbellinnerme', 'asianmovieshows', 'jerryyyoftommm', 'tommmofjerryyy', 'rosestheticsbloom']:  # Your channels
             message_id = message.message_id
             chat_id = message.chat_id
             emojis = ['❤', '❤‍🔥', '🥰', '🍓', '🤩', '🤗', '🕊']  # List of random emojis
